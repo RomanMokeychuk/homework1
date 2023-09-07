@@ -1,76 +1,58 @@
-//1 програма
+// 1 програма
+// Оголошуєм функцію з ім'ям reverseString, яка одразу повертає результат
+function reverseString() {
+  return prompt("Введіть рядок:").split("").reverse().join("");
+  //split("") розбиває рядок на масив окремих символів
+  //reverse() змінює порядок елементів на протилежний
+  //join("") об'єднує елементи масиву в рядок без роздільника
+}
+console.log(reverseString());
 
-function isExemple(number) {
-  // Якщо число <= 1, то воно не є простим числом
-  if (number <= 1) return false;
-  // 2 та 3 - прості числа
-  if (number <= 3) return true;
-  // якщо число ділиться на 2 або 3, то воно складене
-  if (number % 2 === 0 || number % 3 === 0) return false;
-  let i = 5;
-  while (i * i <= number) {
-    // якщо число ділиться на i або (i + 2) то воно складене
-    if (number % i === 0 || number % (i + 2) === 0) return false;
-    i += 6;
-  }
-  return true;
+// //2 програма
+//Функція isPalindrome перевіряє, чи є рядок паліндромом
+function isPalindrome(str) {
+  //Очищуєм рядок від всіх символів, крім літер,
+  //і перетворюємо його на нижній регістр для незалежності від регістру
+  const cleanedString = str.replace(/[^a-zA-Zа-яА-ЯёЁ]/g, "").toLowerCase();
+  ///[^a-zA-Zа-яА-ЯёЁ]/g будь-яким символам, що не є літерами (як латинськими, так і кириличними)
+  //g позначає пошук у всьому рядку
+  //"" замінюємо символи, які не є літерами, замінюємо їх на порожній рядок, тобто видаляємо їх
+  //Обертаєм очищений рядок у зворотному порядку
+  const reversedString = cleanedString.split("").reverse().join("");
+  //Порівнюєм очищений рядок з обернутим рядком і повертаємо результат
+  return cleanedString === reversedString;
 }
 
-const n = parseInt(prompt("Введіть число N:"));
-
-console.log(
-  isExemple(n)
-    ? `Число ${n} є простим числом.`
-    : `Число ${n} не є простим числом.`
-);
-
-//2 програма
-/*sumOfDivisors - це змінна, яка використовується для обчислення суми всіх дільників числа i в циклі,
-який перебирає можливі дільники цього числа.*/
-function findPerfectNumbers(N) {
-  const perfectNumbers = [];
-  // Перебираємо числа від 2 до N
-  for (let i = 2; i <= N; i++) {
-    // Починаємо з 1, бо кожне число ділиться на 1.
-    let sumOfDivisors = 1;
-
-    for (let k = 2; k * k <= i; k++) {
-      if (i % k === 0) {
-        sumOfDivisors += k;
-        // Якщо k не є квадратним коренем числа, то додаємо також його пару
-        if (k !== i / k) {
-          sumOfDivisors += i / k;
-        }
-      }
-    }
-    // Якщо сума дільників дорівнює самому числу, то воно досконале
-    if (sumOfDivisors === i) {
-      perfectNumbers.push(i);
-    }
-  }
-
-  return perfectNumbers;
-}
-
-const N = parseInt(prompt("Введіть число N:"));
-const perfectNumbers = findPerfectNumbers(N);
-
-console.log(
-  `Досконалі числа в діапазоні від 1 до ${N}: ${perfectNumbers.join(", ")}`
-);
+const inputString = prompt("Введіть рядок для перевірки на паліндром:");
+// Викликаємо функцію isPalindrome з введеним рядком і зберігаємо результат
+const result = isPalindrome(inputString);
+console.log(result ? "Це паліндром" : "Це не паліндром");
 
 //3 програма
-
-var j = parseInt(prompt("Введіть висоту ялинки:"));
-var tree = "";
-
-for (var i = 1; i <= j; i++) {
-  // Генеруємо пробіли для вирівнювання
-  var spaces = "  ".repeat(j - i);
-  // Генеруємо зірочки
-  var stars = "* ".repeat(2 * i - 1);
-  // Об'єднуємо і додаємо до рядка
-  tree += spaces + stars + "\n";
+// Функція findGCD(a, b) приймає два числа (a і b) і знаходить їхній НСД (найменший спільний дільник)
+function findGCD(a, b) {
+  while (b !== 0) {
+    // Знаходимо залишок від ділення a на b
+    const remainder = a % b;
+    // Замінюємо a на b
+    a = b;
+    // Замінюємо b на залишок (нове a % b)
+    b = remainder;
+  }
+  return Math.abs(a);
 }
+//Перше число
+const inputNum1 = parseInt(prompt("Введіть перше число:"));
+//Друге число
+const inputNum2 = parseInt(prompt("Введіть друге число:"));
 
-alert(tree);
+// Перевіряєм, ввели дійсні числа (числа, а не текст чи символи)
+if (!isNaN(inputNum1) && !isNaN(inputNum2)) {
+  // Викликаємо функцію
+  const gcd = findGCD(inputNum1, inputNum2);
+  // Виводимо результат
+  console.log(`НСД чисел ${inputNum1} і ${inputNum2} дорівнює ${gcd}`);
+} else {
+  //Ввели щось інше, виводимо повідомлення про помилку
+  console.log("Ви ввели неправильні числа.");
+}
