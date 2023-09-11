@@ -1,58 +1,72 @@
-// 1 програма
-// Оголошуєм функцію з ім'ям reverseString, яка одразу повертає результат
-function reverseString() {
-  return prompt("Введіть рядок:").split("").reverse().join("");
-  //split("") розбиває рядок на масив окремих символів
-  //reverse() змінює порядок елементів на протилежний
-  //join("") об'єднує елементи масиву в рядок без роздільника
-}
-console.log(reverseString());
+//1 програма
+function doubleLetter(str) {
+  /* Розділяєм рядок на масив окремих символів,
+   потім застосовуємо функцію map, щоб кожний символ подвоїти.*/
+  const doubledChars = str.split("").map((char) => char + char);
+  //str.split(""): split("") розбиває рядок str на окремі символи і повертає їх у масиві
+  //(char) => char + char бере кожен символ char і об'єднує його сам з собою подвоюючи його
 
-// //2 програма
-//Функція isPalindrome перевіряє, чи є рядок паліндромом
-function isPalindrome(str) {
-  //Очищуєм рядок від всіх символів, крім літер,
-  //і перетворюємо його на нижній регістр для незалежності від регістру
-  const cleanedString = str.replace(/[^a-zA-Zа-яА-ЯёЁ]/g, "").toLowerCase();
-  ///[^a-zA-Zа-яА-ЯёЁ]/g будь-яким символам, що не є літерами (як латинськими, так і кириличними)
-  //g позначає пошук у всьому рядку
-  //"" замінюємо символи, які не є літерами, замінюємо їх на порожній рядок, тобто видаляємо їх
-  //Обертаєм очищений рядок у зворотному порядку
-  const reversedString = cleanedString.split("").reverse().join("");
-  //Порівнюєм очищений рядок з обернутим рядком і повертаємо результат
-  return cleanedString === reversedString;
+  return doubledChars.join("");
+  // Об'єднуєм масив знову у рядок
 }
 
-const inputString = prompt("Введіть рядок для перевірки на паліндром:");
-// Викликаємо функцію isPalindrome з введеним рядком і зберігаємо результат
-const result = isPalindrome(inputString);
-console.log(result ? "Це паліндром" : "Це не паліндром");
+const inputWord = prompt("Введіть слово:");
+
+if (inputWord !== null) {
+  const result = doubleLetter(inputWord);
+  console.log(result);
+}
+//2 програма
+function padString(str, length, symbol, toLeft = true) {
+  /*str: початковий рядок, до якого потрібно додати символи
+    length: цільова довжина рядка після додавання символів
+    symbol: символ, яким доповнюється рядок
+    toLeft (за замовчуванням false): флаг, який вказує, з якого боку додавати символи (true - зліва, false - справа)*/
+  if (str.length >= length) {
+    return str;
+    // Повертаєм вихідний рядок без змін, якщо він вже довший або рівний вказаній довжині
+  }
+
+  const padding = symbol.repeat(length - str.length);
+  // Генеруєм рядок з необхідною кількістю символів
+
+  if (toLeft) {
+    return padding + str;
+    // Додаєм символи зліва
+  } else {
+    return str + padding;
+    // Додаєм символи справа
+  }
+}
+
+const inputString = prompt("Введіть рядок:");
+const inputLength = parseInt(prompt("Введіть довжину:"));
+const inputSymbol = prompt("Введіть символ:");
+
+//(true для зліва, false для справа)
+const inputToLeft = confirm("Додавати символи зліва?");
+
+const result = padString(inputString, inputLength, inputSymbol, inputToLeft);
+
+console.log(result);
 
 //3 програма
-// Функція findGCD(a, b) приймає два числа (a і b) і знаходить їхній НСД (найменший спільний дільник)
-function findGCD(a, b) {
-  while (b !== 0) {
-    // Знаходимо залишок від ділення a на b
-    const remainder = a % b;
-    // Замінюємо a на b
-    a = b;
-    // Замінюємо b на залишок (нове a % b)
-    b = remainder;
-  }
-  return Math.abs(a);
-}
-//Перше число
-const inputNum1 = parseInt(prompt("Введіть перше число:"));
-//Друге число
-const inputNum2 = parseInt(prompt("Введіть друге число:"));
+// Функція camelCase приймає рядок str та масив роздільників separators
+function camelCase(str, separators) {
+  // Розділити рядок на слова за допомогою вказаних роздільників
+  const words = str.split(new RegExp(`[${separators}]`));
 
-// Перевіряєм, ввели дійсні числа (числа, а не текст чи символи)
-if (!isNaN(inputNum1) && !isNaN(inputNum2)) {
-  // Викликаємо функцію
-  const gcd = findGCD(inputNum1, inputNum2);
-  // Виводимо результат
-  console.log(`НСД чисел ${inputNum1} і ${inputNum2} дорівнює ${gcd}`);
-} else {
-  //Ввели щось інше, виводимо повідомлення про помилку
-  console.log("Ви ввели неправильні числа.");
+  // Перетворити перший символ кожного слова на верхній регістр
+  for (let i = 0; i < words.length; i++) {
+    words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+  }
+  return words.join("");
+}
+const inputText = prompt("Введіть текст для перетворення на camelCase:");
+
+if (inputText !== null) {
+  const separator = prompt("Введіть роздільники (наприклад, -, _, ., тощо):");
+
+  const camelCased = camelCase(inputText, separator);
+  console.log(camelCased);
 }
