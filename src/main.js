@@ -1,72 +1,91 @@
-//1 програма
-function doubleLetter(str) {
-  /* Розділяєм рядок на масив окремих символів,
-   потім застосовуємо функцію map, щоб кожний символ подвоїти.*/
-  const doubledChars = str.split("").map((char) => char + char);
-  //str.split(""): split("") розбиває рядок str на окремі символи і повертає їх у масиві
-  //(char) => char + char бере кожен символ char і об'єднує його сам з собою подвоюючи його
+// //1 програма
+const inputArray = prompt(
+  "Введіть масив елементів, розділених комами (наприклад, 1,2,3,4,5):"
+);
+// Перетворення з введеного масиву в масив чисел
+const originalArray = inputArray.split(",").map(Number);
+//inputArray  розділяє рядок на підстроки, використовуючи кому (,) як роздільник
+//.map(Number) перетворює кожен елемент масиву з рядків у числа
+//reverse() розвертае масив
+originalArray.reverse();
+console.log(originalArray);
 
-  return doubledChars.join("");
-  // Об'єднуєм масив знову у рядок
-}
-
-const inputWord = prompt("Введіть слово:");
-
-if (inputWord !== null) {
-  const result = doubleLetter(inputWord);
-  console.log(result);
-}
 //2 програма
-function padString(str, length, symbol, toLeft = true) {
-  /*str: початковий рядок, до якого потрібно додати символи
-    length: цільова довжина рядка після додавання символів
-    symbol: символ, яким доповнюється рядок
-    toLeft (за замовчуванням false): флаг, який вказує, з якого боку додавати символи (true - зліва, false - справа)*/
-  if (str.length >= length) {
-    return str;
-    // Повертаєм вихідний рядок без змін, якщо він вже довший або рівний вказаній довжині
-  }
-
-  const padding = symbol.repeat(length - str.length);
-  // Генеруєм рядок з необхідною кількістю символів
-
-  if (toLeft) {
-    return padding + str;
-    // Додаєм символи зліва
-  } else {
-    return str + padding;
-    // Додаєм символи справа
-  }
+function uniqueValues(array1, array2) {
+  //Множини Set з вхідних масивів для видалення дублікатів
+  const set1 = new Set(array1);
+  const set2 = new Set(array2);
+  // Об'єднуєм множини та створюємо нову множину, щоб зберегти унікальні значення
+  const uniqueSet = new Set([...set1, ...set2]);
+  // Перетворюєм множину у масив, щоб повернути результат у вигляді масиву.
+  return Array.from(uniqueSet);
 }
 
-const inputString = prompt("Введіть рядок:");
-const inputLength = parseInt(prompt("Введіть довжину:"));
-const inputSymbol = prompt("Введіть символ:");
+const inputArray1 = prompt(
+  "Введіть перший масив (використовуйте кому для розділення значень):"
+);
+const inputArray2 = prompt(
+  "Введіть другий масив (використовуйте кому для розділення значень):"
+);
+// Розділяєм введені рядки на масиви та перетворюємо їх елементи на числа.
+const array1 = inputArray1.split(",").map(Number);
+const array2 = inputArray2.split(",").map(Number);
+const uniqueValuesArray = uniqueValues(array1, array2);
+// Сортуєм масив з унікальними значеннями за зростанням.
+uniqueValuesArray.sort((a, b) => a - b);
 
-//(true для зліва, false для справа)
-const inputToLeft = confirm("Додавати символи зліва?");
-
-const result = padString(inputString, inputLength, inputSymbol, inputToLeft);
-
-console.log(result);
+console.log(uniqueValuesArray);
 
 //3 програма
-// Функція camelCase приймає рядок str та масив роздільників separators
-function camelCase(str, separators) {
-  // Розділити рядок на слова за допомогою вказаних роздільників
-  const words = str.split(new RegExp(`[${separators}]`));
-
-  // Перетворити перший символ кожного слова на верхній регістр
-  for (let i = 0; i < words.length; i++) {
-    words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
-  }
-  return words.join("");
+function calculateAverageGrade(students) {
+  const totalGrade = students.reduce((sum, student) => sum + student.grade, 0);
+  // Обчислюєм середній бал як відношення суми балів до кількості студентів
+  const averageGrade = totalGrade / students.length;
+  return averageGrade;
 }
-const inputText = prompt("Введіть текст для перетворення на camelCase:");
+// Створюєм порожній масив для зберігання даних про студентів
+const students = [];
 
-if (inputText !== null) {
-  const separator = prompt("Введіть роздільники (наприклад, -, _, ., тощо):");
+function getStudentData() {
+  const name = prompt("Введіть ім'я студента:");
+  if (name === null) return null;
+  // Перевіряємо, чи користувач не скасував введення
+  const age = parseInt(prompt("Введіть вік студента:"));
+  const grade = parseFloat(prompt("Введіть середній бал студента:"));
 
-  const camelCased = camelCase(inputText, separator);
-  console.log(camelCased);
+  return { name, age, grade };
+}
+
+function displayStudentList() {
+  console.log("Список студентів:");
+  students.forEach((student) => {
+    console.log(
+      `Ім'я: ${student.name}, Вік: ${student.age}, Бал: ${student.grade}`
+    );
+  });
+}
+
+while (true) {
+  const studentData = getStudentData();
+  if (studentData === null) break;
+  // Виходимо з циклу, якщо користувач скасував введення
+
+  if (
+    studentData.name &&
+    !isNaN(studentData.age) &&
+    !isNaN(studentData.grade)
+  ) {
+    // Додаєм дані студента до масиву students
+    students.push(studentData);
+  } else {
+    alert("Некоректні дані.");
+  }
+}
+
+displayStudentList();
+// Перевіряєм, чи є дані про студентів для обчислення середнього балу
+if (students.length > 0) {
+  console.log("Середній бал студентів:", calculateAverageGrade(students));
+} else {
+  console.log("Дані про студентів відсутні.");
 }
