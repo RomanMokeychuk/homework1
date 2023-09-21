@@ -1,63 +1,109 @@
-//1 програма
-function capitalizeStrings(stringsArray) {
-  const capitalizedArray = [];
-  // Створюєм порожній масив для зберігання перетворених рядків
-  for (const str of stringsArray) {
-    // Перетворюєм поточний рядок, роблячи першу літеру великою (toUpperCase())
-    // і решту літер в нижньому регістрі (toLowerCase())
-    const capitalizedStr =
-      str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-    // Додаєм перетворений рядок до масиву capitalizedArray
-    capitalizedArray.push(capitalizedStr);
+// //1 програма
+function isPrime(num) {
+  if (num <= 1) {
+    // Якщо число менше або дорівнює 1, воно не є простим
+    return false;
   }
-  // Повертаєм новий масив із перетвореними рядками
-  return capitalizedArray;
+  for (let i = 2; i <= Math.sqrt(num); i++) {
+    // Перевіряєм дільники від 2 до квадратного кореня з числа
+    if (num % i === 0) {
+      // Якщо знайдено дільник, число не є простим
+      return false;
+    }
+  }
+  // Якщо жодний дільник не знайдений, число є простим
+  return true;
 }
-const inputString = prompt("Введите строки через запятую (без пробелов):");
-const words = inputString.split(",");
-console.log(capitalizeStrings(words));
+function filterPrimesWithInput() {
+  const input = prompt("Введіть числа через кому (без пробілів):");
+  const numbersArray = input.split(",").map(Number);
+  const primeNumbers = numbersArray.filter((num) => isPrime(num));
+  return primeNumbers;
+}
+
+const primeNumbers = filterPrimesWithInput();
+console.log("Прості числа: " + primeNumbers.join(", "));
 
 //2 програма
-function findCommonElements(array1, array2) {
-  /*Використовуєм метод filter для створення нового масиву, в якому лишаються тільки елементи,
-    які є в обох вхідних масивах (array1 і array2)*/
-  const commonElements = array1.filter((element) => array2.includes(element));
-  return commonElements;
+function transformNotifications() {
+  const notificationsArray = [];
+  // Запитуєм користувача про сповіщення, поки він не введе "exit"
+  while (true) {
+    const source = prompt(
+      "Введіть джерело сповіщення (або введіть 'exit' для завершення):"
+    );
+
+    if (source === "exit") {
+      // Якщо користувач ввів "exit", завершуємо цикл
+      break;
+    }
+
+    const text = prompt("Введіть текст сповіщення:");
+    const date = prompt("Введіть дату сповіщення:");
+    const notification = { source, text, date };
+    notificationsArray.push(notification);
+  }
+  const transformedObject = notificationsArray.reduce((acc, notification) => {
+    const source = notification.source;
+
+    // Використовуємо оператор nullish (??), щоб перевірити, чи вже існує масив для даного джерела
+    // Якщо масив не існує, то створюємо новий порожній масив
+    acc[source] ??= [];
+    acc[source].push(notification);
+
+    return acc;
+  }, {});
+
+  return transformedObject;
 }
-const input1 = prompt(
-  "Введіть числа через кому для першого масиву (без пробілів):"
-);
-const input2 = prompt(
-  "Введіть числа через кому для другого масиву (без пробілів):"
-);
-
-const array1 = input1.split(",").map(Number);
-const array2 = input2.split(",").map(Number);
-
-console.log(findCommonElements(array1, array2));
+const transformedData = transformNotifications();
+console.log(transformedData);
 
 //3 програма
-function analyzeArray(numbersArray) {
-  // Використовуєм деструктуризацію для одразу отримати мінімальне та максимальне значення
-  const { min, max } = numbersArray.reduce(
-    (acc, num) => ({
-      min: Math.min(acc.min, num),
-      max: Math.max(acc.max, num),
-    }),
-    { min: Infinity, max: -Infinity }
-  );
-  // Обчислюєм суму елементів масиву за допомогою метода reduce
-  const sum = numbersArray.reduce((acc, num) => acc + num, 0);
-  // Обчислюєм середнє значення елементів, поділяючи суму на кількість елементів
-  const average = sum / numbersArray.length;
-  // Об'єкт з обчисленими значеннями
-  return {
-    sum,
-    average,
-    min,
-    max,
-  };
+function groupArrayByKey(inputArray, key) {
+  const groupedObject = {};
+  // Проходим по каждому объекту во входном массиве
+  for (const item of inputArray) {
+    // Получаем значение ключа для текущего объекта
+    const keyValue = item[key];
+    // Если группа с данным значением ключа еще не существует, создаем ее как пустой массив
+    if (!groupedObject[keyValue]) {
+      groupedObject[keyValue] = [];
+    }
+    // Добавляем текущий объект в соответствующую группу
+    groupedObject[keyValue].push(item);
+  }
+  // Возвращаем объект с группированными данными
+  return groupedObject;
 }
-const input = prompt("Введіть числа через кому (без пробілів):");
-const numbers = input.split(",").map(Number);
-console.log(analyzeArray(numbers));
+
+// Пустой объект, в котором будем хранить все группы объектов
+const allGroups = {};
+
+while (true) {
+  // Запрашиваем у пользователя ключ для группировки объектов
+  const key = prompt(
+    "Введите ключ для группировки объектов (или 'exit' для завершения):"
+  );
+
+  if (key === "exit") {
+    // Если пользователь ввел "exit", завершаем ввод
+    break;
+  }
+  const numberOfObjects = parseInt(
+    prompt("Введите количество объектов в текущей группе:")
+  );
+  const inputArray = [];
+  for (let i = 0; i < numberOfObjects; i++) {
+    const item = {};
+    item[key] = prompt(`Введите значение ключа для элемента ${i + 1}:`);
+    inputArray.push(item);
+  }
+
+  const groupedData = groupArrayByKey(inputArray, key);
+  allGroups[key] = groupedData;
+
+  console.log("Текущие группы:", allGroups);
+}
+
+console.log("Все группы:", allGroups);
