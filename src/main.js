@@ -1,32 +1,45 @@
 //1 програма
-const notifications = [];
-while (true) {
-  const source = prompt(
-    "Введите источник уведомления (или нажмите 'Отмена' для завершения):"
-  );
-  //Проверяем, была ли нажата кнопка "Отмена" или поле оставлено пустым
-  if (source === null || source.trim() === "") {
-    //Если да, завершаем ввод уведомлений
-    break;
+// Функція для отримання сповіщень від користувача
+function getNotifications() {
+  const notifications = [];
+  while (true) {
+    const source = prompt(
+      "Введіть джерело повідомлення (або натисніть 'Скасувати' для завершення):"
+    );
+    if (source === null || source.trim() === "") {
+      // Вихід з циклу, якщо користувач натиснув "Відміна" або залишив поле порожнім
+      break;
+    }
+    const text = prompt("Введіть текст повідомлення:");
+    const date = prompt("Введіть дату повідомлення:");
+    const notification = { source, text, date };
+    notifications.push(notification);
   }
-  const text = prompt("Введите текст уведомления:");
-  const date = prompt("Введите дату уведомления:");
-  // Создаем объект уведомления и добавляем его в массив
-  const notification = { source, text, date };
-  notifications.push(notification);
+  // Створюємо ітератор для повідомлення
+  const iterator = {
+    [Symbol.iterator]() {
+      let index = 0;
+      return {
+        next() {
+          if (index < notifications.length) {
+            return { value: notifications[index++], done: false };
+          } else {
+            return { done: true };
+          }
+        },
+      };
+    },
+  };
+  return iterator;
 }
-// Функция для обхода уведомлений и их вложенных списков
-function iterateNotifications(notifications) {
-  for (const notification of notifications) {
-    // Выводим информацию о текущем уведомлении
-    console.log(`Источник: ${notification.source}`);
-    console.log(`Текст: ${notification.text}`);
-    console.log(`Дата: ${notification.date}`);
-    // Добавляем разделитель между уведомлениями
-    console.log("=========================================");
-  }
+const notifications = getNotifications();
+// Ітеруємося по повідомлення і виводимо їх на консоль
+for (const notification of notifications) {
+  console.log(`Джерело: ${notification.source}`);
+  console.log(`Текст: ${notification.text}`);
+  console.log(`Дата: ${notification.date}`);
+  console.log("=========================================");
 }
-iterateNotifications(notifications);
 
 // 2 програма
 function memoize(fn) {
