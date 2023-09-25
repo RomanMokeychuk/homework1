@@ -15,7 +15,18 @@ while (true) {
   const notification = { source, text, date };
   notifications.push(notification);
 }
-console.log(notifications);
+// Функция для обхода уведомлений и их вложенных списков
+function iterateNotifications(notifications) {
+  for (const notification of notifications) {
+    // Выводим информацию о текущем уведомлении
+    console.log(`Источник: ${notification.source}`);
+    console.log(`Текст: ${notification.text}`);
+    console.log(`Дата: ${notification.date}`);
+    // Добавляем разделитель между уведомлениями
+    console.log("=========================================");
+  }
+}
+iterateNotifications(notifications);
 
 // 2 програма
 function memoize(fn) {
