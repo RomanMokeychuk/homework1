@@ -1,69 +1,47 @@
 //1 програма
-// Функція для отримання сповіщень від користувача
-function getNotifications() {
-  const notifications = [];
-  while (true) {
-    const source = prompt(
-      "Введіть джерело повідомлення (або натисніть 'Скасувати' для завершення):"
-    );
-    if (source === null || source.trim() === "") {
-      // Вихід з циклу, якщо користувач натиснув "Відміна" або залишив поле порожнім
-      break;
-    }
-    const text = prompt("Введіть текст повідомлення:");
-    const date = prompt("Введіть дату повідомлення:");
-    const notification = { source, text, date };
-    notifications.push(notification);
-  }
-  // Створюємо ітератор для повідомлення
-  const iterator = {
-    [Symbol.iterator]() {
-      let index = 0;
-      return {
-        next() {
-          if (index < notifications.length) {
-            return { value: notifications[index++], done: false };
-          } else {
-            return { done: true };
-          }
-        },
-      };
-    },
-  };
-  return iterator;
+function logArguments(fn) {
+    // Повертаєм нову функцію яка приймає будь-яку кількість аргументів за допомогою оператора rest (...)
+    return function (...args) {
+        console.log("Arguments:", args);
+        // Викликаєм оригінальну функцію fn, використовуючи метод apply передаючи їй аргументи
+        return fn.apply(this, args);
+    };
 }
-const notifications = getNotifications();
-// Ітеруємося по повідомлення і виводимо їх на консоль
-for (const notification of notifications) {
-  console.log(`Джерело: ${notification.source}`);
-  console.log(`Текст: ${notification.text}`);
-  console.log(`Дата: ${notification.date}`);
-  console.log("=========================================");
+// Оголошуєм оригінальну функцію exampleFunction яка обчислює суму трьох чисел
+function exampleFunction(a, b, c) {
+    return a + b + c;
 }
+// Використовуєм функцію-декоратор logArguments для створення нової функції decoratedExampleFunction
+const decoratedExampleFunction = logArguments(exampleFunction);
+// Викликаєм decoratedExampleFunction з аргументами
+const result = decoratedExampleFunction(6, 8, 2);
+console.log("Result:", result);
 
-// 2 програма
-function memoize(fn) {
-  //Создаем объект cache для хранения кеша результатов вычислений
-  const cache = new Map();
-  //Возвращаем новую функцию которая будет выполнять кеширование
-  return function (...args) {
-    //Создаем ключ для кеширования на основе аргументов
-    const key = JSON.stringify(args);
-    if (cache.has(key)) {
-      return cache.get(key);
-    } else {
-      const result = fn(...args);
-      cache.set(key, result);
-      return result;
-    }
-  };
+//2 програма
+function validate(fn, validator) {
+    return function (...args) {
+        // Перевірка аргументів за допомогою валідатора
+        if (!validator(...args)) {
+            throw new Error("Invalid arguments");
+        }
+        return fn(...args);
+    };
 }
-function expensiveCalculation(x, y) {
-  console.log(`Вычисление для аргументов ${x} и ${y}`);
-  return x + y;
+// Валідатор який перевіряє чи всі аргументи є числами
+function numberValidator(...args) {
+    return args.every((arg) => typeof arg === "number");
 }
-const memoizedCalculation = memoize(expensiveCalculation);
-//Первый вызов - результат вычисления будет сохранен в кеше
-console.log(memoizedCalculation(5, 9));
-//Второй вызов с теми же аргументами - результат будет взят из кеша
-console.log(memoizedCalculation(5, 9));
+function sumNumbers(a, b) {
+    return a + b;
+}
+// Створення верифікованої функції sumNumbers з використанням валідатора
+const validatedSumNumbers = validate(sumNumbers, numberValidator);
+// Виклик функції з логікою перевірки аргументів
+const outcome = validatedSumNumbers(6, 4);
+console.log("Result:", outcome);
+try {
+    // Спроба викликати функцію з неправильними аргументами
+    validatedSumNumbers(10, "invalid");
+} catch (error) {
+    console.error("Error:", error.message);
+}
