@@ -1,311 +1,235 @@
-//1 програма
-// Конструктор об'єкта Student
-function Student(firstName, lastName, birthYear, initialCourse) {
-    this.firstName = firstName; // Ім'я студента
-    this.lastName = lastName; // Прізвище студента
-    this.birthYear = birthYear; // Рік народження студента
-    this.courses = [initialCourse]; // Масив, що містить курси, на яких навчається студент
-    this.grades = []; // Масив для збереження оцінок студента
-    this.attendance = []; // Масив для збереження дат відвідування студента
-    // Метод для додавання оцінки студенту
-    this.addGrade = function (grade) {
-        this.grades.push(grade);
-    };
-    // Метод для додавання дати відвідування студента
-    this.addAttendance = function (date) {
-        this.attendance.push(date);
-    };
-    // Метод для обчислення середньої оцінки студента
-    this.getAverageGrade = function () {
-        if (this.grades.length === 0) {
-            return 0;
-        }
-        const sum = this.grades.reduce((total, grade) => total + grade);
-        return sum / this.grades.length;
-    };
-    // Метод для обчислення середньої відвідуваності студента
-    this.getAverageAttendance = function () {
-        if (this.attendance.length === 0) {
-            return 0;
-        }
-        const totalDays = this.attendance.length;
-        const presentDays = this.attendance.filter(
-            (date) => date.trim() !== ""
-        ).length;
-        return (presentDays / totalDays) * 100;
-    };
-    //2 пргограма
-    // Метод для зміни курсу студента
-    this.changeCourse = function () {
-        const newCourse = parseInt(prompt("Введіть новий курс:"));
-        if (!isNaN(newCourse) && newCourse >= 1 && newCourse <= 6) {
-            this.courses = [newCourse]; // При зміні курсу, стираємо попередні курси і додаємо новий
-            console.log(`Курс змінено на ${newCourse}`);
-        } else {
-            console.log("Помилка: Курс повинен бути від 1 до 6");
-        }
-    };
-    // Метод для додавання нового курсу студентові
-    this.addCourse = function () {
-        const newCourse = parseInt(prompt("Введіть новий курс для додавання:"));
-        if (!isNaN(newCourse) && newCourse >= 1 && newCourse <= 6) {
-            if (!this.courses.includes(newCourse)) {
-                this.courses.push(newCourse);
-                console.log(`Студент навчається на курсі ${newCourse}`);
-            } else {
-                console.log("Студент вже навчається на цьому курсі");
-            }
-        } else {
-            console.log("Помилка: Курс повинен бути від 1 до 6");
-        }
-    };
-    // Метод для видалення курсу у студента
-    this.removeCourse = function () {
-        const courseToRemove = parseInt(prompt("Введіть курс для видалення:"));
-        if (
-            !isNaN(courseToRemove) &&
-            courseToRemove >= 1 &&
-            courseToRemove <= 6
-        ) {
-            const index = this.courses.indexOf(courseToRemove);
-            if (index !== -1) {
-                this.courses.splice(index, 1);
-                console.log(
-                    `Студент більше не навчається на курсі ${courseToRemove}`
-                );
-            } else {
-                console.log("Студент не навчається на цьому курсі");
-            }
-        } else {
-            console.log("Помилка: Курс повинен бути від 1 до 6");
-        }
-    };
-    // Метод для отримання інформації про студента
-    this.getInfo = function () {
-        return `Ім'я: ${this.firstName}, Прізвище: ${
-            this.lastName
-        }, Рік народження: ${this.birthYear}, Курси: ${this.courses.join(
-            ", "
-        )}, Оцінки: ${this.grades.join(
-            ", "
-        )}, Відвідуваність: ${this.attendance.join(", ")}`;
-    };
-    // Метод для отримання кількості занять, на які студент відвідав
-    this.getNumberOfClassesAttended = function () {
-        return this.attendance.length;
-    };
-}
-const firstName = prompt("Введіть ім'я студента:");
-const lastName = prompt("Введіть прізвище студента:");
-const birthYear = parseInt(prompt("Введіть рік народження студента:"));
-
-let initialCourse;
-while (true) {
-    initialCourse = parseInt(prompt("Введіть початковий курс студента:"));
-    if (!isNaN(initialCourse) && initialCourse >= 1 && initialCourse <= 6) {
-        break;
-    } else {
-        alert("Початковий курс повинен бути числом від 1 до 6.");
+// Клас TodoList для керування списком нотаток
+class TodoList {
+    constructor() {
+        this.notes = [];
     }
-}
-const student = new Student(firstName, lastName, birthYear, initialCourse);
-while (true) {
-    const gradeInput = prompt(
-        "Введіть оцінку студента (або натисніть 'Скасувати'):"
-    );
-    if (gradeInput === null || gradeInput.trim() === "") {
-        break;
-    }
-    const grade = parseFloat(gradeInput);
-    if (!isNaN(grade)) {
-        student.addGrade(grade);
-    }
-}
-while (true) {
-    const attendanceDate = prompt(
-        "Введіть дату відвідування студента (або натисніть 'Скасувати'):"
-    );
-    if (attendanceDate === null || attendanceDate.trim() === "") {
-        break;
-    }
-    student.addAttendance(attendanceDate);
-}
-// Виводимо інформацію про студента
-console.log(student.getInfo());
-// Розраховуємо середню успішність та відвідуваність
-console.log(
-    "Кількість пройдених занять:",
-    student.getNumberOfClassesAttended()
-);
-console.log("Середня успішність:", student.getAverageGrade());
-console.log("Середнє відвідування:", student.getAverageAttendance() + "%");
-student.changeCourse();
-
-while (true) {
-    const action = prompt(
-        "Ви хочете додати (напишіть 'додати') чи видалити (напишіть 'видалити') курс? (або натисніть 'Скасувати' для завершення):"
-    );
-    if (action === null || action.trim() === "") {
-        break;
-    }
-    if (action === "додати") {
-        student.addCourse();
-    } else if (action === "видалити") {
-        student.removeCourse();
-    } else {
-        console.log("Невірна команда. Введіть 'додати' або 'видалити'.");
-    }
-}
-console.log("Оновлена інформація про студента:");
-console.log(student.getInfo());
-
-// //3 програма
-function Student(firstName, lastName) {
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.grades = [];
-    this.attendance = [];
-
-    this.addGrade = function (grade) {
-        this.grades.push(grade);
-    };
-    this.addAttendance = function (status) {
-        this.attendance.push(status);
-    };
-    this.getAverageGrade = function () {
-        if (this.grades.length === 0) {
-            return 0;
-        }
-        const sum = this.grades.reduce((total, grade) => total + grade);
-        return sum / this.grades.length;
-    };
-    this.getAverageAttendance = function () {
-        if (this.attendance.length === 0) {
-            return 0;
-        }
-        const totalDays = this.attendance.length;
-        const presentDays = this.attendance.filter(
-            (status) => status === "Присутній"
-        ).length;
-        return (presentDays / totalDays) * 100;
-    };
-    this.getRating = function () {
-        const averageGrade = this.getAverageGrade();
-        const averageAttendance = this.getAverageAttendance();
-        return (averageGrade + averageAttendance) / 2;
-    };
-    this.getInfo = function () {
-        return `Ім'я: ${this.firstName}, Прізвище: ${
-            this.lastName
-        }, Середній бал: ${this.getAverageGrade().toFixed(
-            2
-        )}, Відвідуваність: ${this.getAverageAttendance().toFixed(
-            2
-        )}%, Рейтинг: ${this.getRating().toFixed(2)}`;
-    };
-}
-
-function Group() {
-    this.students = [];
-    this.addStudent = function (student) {
-        this.students.push(student);
-        console.log(
-            `Додано студента: ${student.firstName} ${student.lastName}`
-        );
-    };
-    this.removeStudent = function (student) {
-        const index = this.students.indexOf(student);
-        if (index !== -1) {
-            this.students.splice(index, 1);
-            console.log(
-                `Видалено студента: ${student.firstName} ${student.lastName}`
-            );
-        }
-    };
-    this.getStudentsRating = function () {
-        const ratings = [];
-        this.students.forEach((student, index) => {
-            const rating = student.getRating();
-            ratings.push({
-                studentNumber: index + 1,
-                firstName: student.firstName,
-                lastName: student.lastName,
-                rating: rating.toFixed(2),
-                attendance: student.getAverageAttendance().toFixed(2),
+    // Додавання нової нотатки
+    addNote(noteText) {
+        if (noteText.trim() !== "") {
+            const currentDate = new Date();
+            this.notes.push({
+                text: noteText,
+                completed: false,
+                createdDate: currentDate,
+                editedDate: null,
             });
+        }
+    }
+    // Редагування існуючої нотатки за індексом
+    editNote(index, newText) {
+        if (index >= 0 && index < this.notes.length) {
+            const currentDate = new Date();
+            this.notes[index].text = newText;
+            this.notes[index].editedDate = currentDate;
+        }
+    }
+    // Видалення нотатки за індексом
+    deleteNote(index) {
+        if (index >= 0 && index < this.notes.length) {
+            this.notes.splice(index, 1);
+        }
+    }
+    // Зміна статусу виконання нотатки за індексом
+    toggleNoteStatus(index) {
+        if (index >= 0 && index < this.notes.length) {
+            this.notes[index].completed = !this.notes[index].completed;
+        }
+    }
+    // Отримання списку нотаток
+    getNoteList() {
+        return this.notes;
+    }
+    // Отримання загальної кількості нотаток
+    getNoteCount() {
+        return this.notes.length;
+    }
+    // Отримання кількості невиконаних нотаток
+    getRemainingNoteCount() {
+        return this.notes.filter((note) => !note.completed).length;
+    }
+    // Позначення нотатки як виконаної за індексом
+    markNoteAsCompleted(index) {
+        if (index >= 0 && index < this.notes.length) {
+            this.notes[index].completed = true;
+        }
+    }
+    // Отримання кількості виконаних нотаток
+    getCompletedNoteCount() {
+        return this.notes.filter((note) => note.completed).length;
+    }
+    // Пошук нотаток за іменем
+    searchNotesByName(name) {
+        return this.notes.filter((note) =>
+            note.text.toLowerCase().includes(name.toLowerCase())
+        );
+    }
+    // Сортування нотаток за статусом
+    sortNotesByStatus(completedFirst = true) {
+        if (completedFirst) {
+            return this.notes
+                .slice()
+                .sort((a, b) =>
+                    a.completed === b.completed ? 0 : a.completed ? -1 : 1
+                );
+        } else {
+            return this.notes
+                .slice()
+                .sort((a, b) =>
+                    a.completed === b.completed ? 0 : a.completed ? 1 : -1
+                );
+        }
+    }
+}
+
+// Створення екземпляра TodoList
+const todoList = new TodoList();
+
+// Отримання DOM-елементів
+const noteInput = document.getElementById("noteInput");
+const addButton = document.getElementById("addButton");
+const noteList = document.getElementById("noteList");
+const totalNotes = document.getElementById("totalNotes");
+const remainingNotes = document.getElementById("remainingNotes");
+const completedNotesCount = document.getElementById("completedNotesCount");
+
+// Функція для оновлення відображення нотаток
+function updateNoteDisplay() {
+    noteList.innerHTML = "";
+    const notes = todoList.getNoteList();
+    totalNotes.textContent = todoList.getNoteCount();
+    remainingNotes.textContent = todoList.getRemainingNoteCount();
+    completedNotesCount.textContent = todoList.getCompletedNoteCount();
+
+    // Створення HTML-елементів для кожної нотатки
+    notes.forEach((note, index) => {
+        const noteItem = document.createElement("div");
+        noteItem.className = `note ${note.completed ? "completed" : ""}`;
+        noteItem.innerHTML = `
+            <span class="note-text">${note.text}</span>
+            <button class="edit-button" data-index="${index}">${
+            note.completed ? "Переглянути" : "Редагувати"
+        }</button>
+            <button class="delete-button" data-index="${index}">Видалити</button>
+            <button class="complete-button" data-index="${index}">${
+            note.completed ? "Скасувати виконання" : "Позначити як виконану"
+        }</button>
+        `;
+
+        // Додавання обробника подій на кнопку "complete-button"
+        const completeButton = noteItem.querySelector(".complete-button");
+        completeButton.addEventListener("click", () => {
+            if (note.completed) {
+                todoList.toggleNoteStatus(index);
+                updateNoteDisplay();
+            } else {
+                todoList.markNoteAsCompleted(index);
+                updateNoteDisplay();
+            }
         });
-        return ratings;
-    };
-    this.printStudents = function () {
-        console.log("Список студентів:");
-        this.students.forEach((student, index) => {
-            console.log(
-                `${index + 1}. ${student.firstName} ${student.lastName}`
+
+        // Додавання нотатки до списку
+        noteList.appendChild(noteItem);
+    });
+}
+
+// Оновлення відображення при завантаженні сторінки
+updateNoteDisplay();
+
+// Додавання нотатки при кліку на кнопку "Добавити"
+addButton.addEventListener("click", () => {
+    const noteText = noteInput.value;
+    todoList.addNote(noteText);
+    noteInput.value = "";
+    updateNoteDisplay();
+});
+
+// Обробка подій кліку на кнопки "Редагувати" та "Видалити"
+noteList.addEventListener("click", (event) => {
+    if (event.target.classList.contains("edit-button")) {
+        const index = event.target.getAttribute("data-index");
+        const newText = prompt(
+            "Редагувати:",
+            todoList.getNoteList()[index].text
+        );
+        if (newText !== null) {
+            todoList.editNote(index, newText);
+            updateNoteDisplay();
+        }
+    }
+
+    if (event.target.classList.contains("delete-button")) {
+        const index = event.target.getAttribute("data-index");
+        if (confirm("Видалити?")) {
+            todoList.deleteNote(index);
+            updateNoteDisplay();
+        }
+    }
+});
+
+//2 Додавання обробника події для кнопки "Пошук"
+const searchButton = document.getElementById("searchButton");
+const searchInput = document.getElementById("searchInput");
+
+searchButton.addEventListener("click", () => {
+    const searchText = searchInput.value.trim();
+    const searchResults = todoList.searchNotesByName(searchText);
+    displayNotes(searchResults);
+});
+// Додавання обробника події для кнопки "Сортувати"
+const sortButton = document.getElementById("sortButton");
+const sortSelect = document.getElementById("sortSelect");
+
+sortButton.addEventListener("click", () => {
+    const sortByCompletedFirst = sortSelect.value === "completedFirst";
+    const sortedNotes = todoList.sortNotesByStatus(sortByCompletedFirst);
+    displayNotes(sortedNotes);
+});
+
+function displayNotes(notes) {
+    noteList.innerHTML = "";
+    totalNotes.textContent = notes.length;
+
+    notes.forEach((note, index) => {
+        const noteItem = document.createElement("div");
+        noteItem.className = `note ${note.completed ? "completed" : ""}`;
+        noteItem.innerHTML = `
+            <span class="note-text">${note.text}</span>
+            <p class="created-date">Створений: ${note.createdDate.toLocaleString()}</p>
+            <p class="edited-date">Відредаговано: ${
+                note.editedDate
+                    ? note.editedDate.toLocaleString()
+                    : "Не відредаговано"
+            }</p>
+            <button class="edit-button" data-index="${index}">${
+            note.completed ? "Переглянути" : "Редагувати"
+        }</button>
+            <button class="delete-button" data-index="${index}">Видалити</button>
+            <button class="complete-button" data-index="${index}">${
+            note.completed ? "Скасувати виконання" : "Позначити як виконану"
+        }</button>
+        `;
+
+        // Додавання обробників подій на кнопки
+        const completeButton = noteItem.querySelector(".complete-button");
+        completeButton.addEventListener("click", () => {
+            if (note.completed) {
+                todoList.toggleNoteStatus(index);
+                displayNotes(notes);
+            } else {
+                todoList.markNoteAsCompleted(index);
+                displayNotes(notes);
+            }
+
+            // Оновити список нотаток із відповідними індексами
+            displayNotes(
+                todoList.sortNotesByStatus(
+                    sortSelect.value === "completedFirst"
+                )
             );
         });
-    };
+
+        noteList.appendChild(noteItem);
+    });
 }
-
-// Функція для введення інформації про студента
-function enterStudentInfo() {
-    const firstName = prompt("Введіть ім'я студента:");
-    const lastName = prompt("Введіть прізвище студента:");
-    const student = new Student(firstName, lastName);
-
-    return student;
-}
-
-// Функція для введення інформації про оцінки та відвідуваність
-function enterStudentData(student) {
-    while (true) {
-        const gradeInput = prompt(
-            "Введіть оцінку студента (або натисніть 'Скасувати'):"
-        );
-        if (gradeInput === null || gradeInput.trim() === "") {
-            break;
-        }
-        const grade = parseFloat(gradeInput);
-        if (!isNaN(grade)) {
-            student.addGrade(grade);
-        }
-    }
-
-    while (true) {
-        const attendanceStatus = prompt(
-            "Введіть статус відвідуваності студента (Присутній/Відсутній) " +
-                "(або натисніть 'Скасувати'):"
-        );
-        if (attendanceStatus === null || attendanceStatus.trim() === "") {
-            break;
-        }
-        student.addAttendance(attendanceStatus);
-    }
-}
-
-const group = new Group();
-
-while (true) {
-    const action = prompt(
-        "Ви хочете додати нового студента (напишіть 'додати') чи завершити (напишіть 'завершити')? " +
-            "(або натисніть 'Скасувати':"
-    );
-    if (
-        action === null ||
-        action.trim() === "" ||
-        action.toLowerCase() === "завершити"
-    ) {
-        break;
-    } else if (action.toLowerCase() === "додати") {
-        const student = enterStudentInfo();
-        enterStudentData(student);
-        group.addStudent(student);
-        group.printStudents();
-    }
-}
-const ratings = group.getStudentsRating();
-console.log("Рейтинг студентів:");
-ratings.forEach((student) => {
-    console.log(
-        `${student.studentNumber}. ${student.firstName} ${student.lastName} - Рейтинг: ${student.rating}, Відвідуваність: ${student.attendance}%`
-    );
-});
+// Оновлення відображення при завантаженні сторінки
+todoList.updateNoteDisplay();
